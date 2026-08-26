@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Adem">
+<meta name="theme-color" content="#0A0C0F">
+<title>Adem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0C0F;
+  --surface:#141A21;
+  --surface-2:#1C242D;
+  --line:#28323D;
+  --text:#EDF2F7;
+  --text-2:#8E9CA9;
+  --text-3:#5A6874;
+  --good:#00E08A;
+  --mid:#FFB020;
+  --bad:#FF4D4D;
+  --accent:#00C2FF;
+  --r:16px;
+  --nav-h:66px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg)}
+body{
+  color:var(--text);
+  background:var(--bg);
+  min-height:100vh;
+  font-family:"Inter",system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
+}
+.wrap{max-width:620px;margin:0 auto;padding:0 16px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:17px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-2);margin:26px 0 12px}
+.num{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- topbar ---------- */
+.topbar{
+  padding:calc(env(safe-area-inset-top) + 18px) 16px 0;
+  max-width:620px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.topbar .day{font-size:14px;color:var(--text-2);text-transform:capitalize}
+.topbar .brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:30px;letter-spacing:.02em;line-height:1;margin-top:2px}
+.streak{
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;
+  padding:7px 14px;font-size:13px;color:var(--text-2);white-space:nowrap;
+}
+.streak b{color:var(--text);font-family:"Barlow Condensed",sans-serif;font-size:17px}
+
+/* ---------- ring ---------- */
+.hero{display:flex;flex-direction:column;align-items:center;padding:14px 0 4px}
+.ring-wrap{position:relative;width:216px;height:216px}
+.ring-wrap svg{transform:rotate(-90deg);display:block}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring-center .big{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:68px;line-height:.85;font-variant-numeric:tabular-nums}
+.ring-center .cap{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-top:8px}
+.ring-center .verdict{font-size:15px;font-weight:600;margin-top:5px}
+.hero .hint{font-size:13px;color:var(--text-3);margin-top:10px}
+
+/* ---------- cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card.tight{padding:14px}
+.card h3{font-size:16px;font-weight:600;margin:0 0 12px;letter-spacing:.01em}
+.card h3 .sub{font-weight:400;color:var(--text-3);font-size:13px;margin-left:7px}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:9px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px}
+.tile .k{font-size:12px;color:var(--text-3);letter-spacing:.05em;text-transform:uppercase;line-height:1.3}
+.tile .v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:32px;line-height:1.05;margin-top:5px;font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--text-3);margin-top:1px}
+
+/* ---------- fields ---------- */
+.fld{display:block;margin-bottom:12px}
+.fld > span{display:block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px}
+input[type=text],input[type=number],input[type=date],textarea,select{
+  font-family:inherit;font-size:17px;color:var(--text);
+  background:var(--surface-2);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 14px;width:100%;outline:none;
+  -webkit-appearance:none;appearance:none;
+  color-scheme:dark;
+}
+input[type=date]::-webkit-date-and-time-value{text-align:left;color:var(--text)}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.6)}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+input::placeholder,textarea::placeholder{color:var(--text-3)}
+textarea{resize:vertical;min-height:76px;line-height:1.5}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--text-2) 50%),linear-gradient(135deg,var(--text-2) 50%,transparent 50%);background-position:calc(100% - 18px) 22px,calc(100% - 13px) 22px;background-size:5px 5px;background-repeat:no-repeat}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}
+
+/* ---------- toggles ---------- */
+.togs{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tog{
+  display:flex;align-items:center;gap:11px;
+  background:var(--surface-2);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 13px;cursor:pointer;user-select:none;
+  transition:border-color .15s,background .15s;
+}
+.tog input{position:absolute;opacity:0;width:0;height:0}
+.tog .box{
+  width:22px;height:22px;min-width:22px;border-radius:7px;
+  border:1.5px solid var(--text-3);display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.tog .box svg{width:13px;height:13px;opacity:0;transition:opacity .15s}
+.tog span.lbl{font-size:16px;font-weight:500}
+.tog.on{background:rgba(0,224,138,.09);border-color:var(--good)}
+.tog.on .box{background:var(--good);border-color:var(--good)}
+.tog.on .box svg{opacity:1}
+.tog.rescue.on{background:rgba(255,77,77,.09);border-color:var(--bad)}
+.tog.rescue.on .box{background:var(--bad);border-color:var(--bad)}
+.tog.wide{grid-column:1/-1}
+
+/* ---------- sliders ---------- */
+.sl{margin-bottom:18px}
+.sl .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.sl .nm{font-size:16px;font-weight:500}
+.sl .val{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+.sl input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:34px;background:transparent;margin:0;display:block;
+}
+.sl input[type=range]::-webkit-slider-runnable-track{height:7px;border-radius:4px;background:var(--surface-2)}
+.sl input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+  background:#fff;border:none;margin-top:-9.5px;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer;
+}
+.sl input[type=range]::-moz-range-track{height:7px;border-radius:4px;background:var(--surface-2)}
+.sl input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:none;cursor:pointer}
+.sl .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);margin-top:-2px}
+
+/* ---------- buttons ---------- */
+button{
+  font-family:inherit;font-weight:600;font-size:16px;
+  border:none;border-radius:13px;padding:14px 20px;cursor:pointer;
+  background:var(--accent);color:#00232F;width:100%;
+}
+button:active{opacity:.85}
+button.ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+button.danger{background:transparent;color:var(--bad);border:1px solid rgba(255,77,77,.35)}
+button.sm{padding:10px 14px;font-size:13px;width:auto}
+button:disabled{opacity:.4}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stack{display:flex;flex-direction:column;gap:9px}
+.inline{display:flex;gap:9px;flex-wrap:wrap}
+.inline button{width:auto;flex:1 1 auto}
+
+/* ---------- day strip ---------- */
+.stripbox{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px}
+.strip{display:flex;align-items:flex-end;gap:3px;height:118px;padding:0 2px}
+.col{width:16px;min-width:16px;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;cursor:pointer}
+.col .bar{width:100%;border-radius:4px;transition:filter .12s}
+.col:active .bar{filter:brightness(1.4)}
+.col .dots{display:flex;flex-direction:column;gap:2px;align-items:center;height:14px;justify-content:flex-start}
+.col .dot{width:5px;height:5px;border-radius:50%}
+.col.empty .bar{height:5px;background:var(--surface-2)}
+.axis{display:flex;gap:3px;padding:6px 2px 0}
+.axis .t{width:16px;min-width:16px;font-size:9px;color:var(--text-3);text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:13px;margin-top:14px;font-size:12px;color:var(--text-3)}
+.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.readout{font-size:13px;color:var(--text-2);border-top:1px solid var(--line);margin-top:13px;padding-top:12px;min-height:36px;line-height:1.6}
+.readout b{color:var(--text)}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 4px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+td.n{text-align:right;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:16px;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.r-hi{color:var(--accent)}
+.r-lo{color:var(--text-3)}
+tr.faint td{color:var(--text-3)}
+
+.note{font-size:14px;color:var(--text-2);background:var(--surface-2);border-radius:12px;padding:13px 14px;line-height:1.55}
+.note b{color:var(--text)}
+.note.warn{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.22)}
+.note.alert{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.25)}
+
+#report{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.65;color:var(--text-2);background:var(--surface-2);border-radius:12px;padding:15px;max-height:56vh;overflow:auto}
+
+/* ---------- bottom nav ---------- */
+nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(10,12,15,.92);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);
+  display:flex;
+}
+nav button{
+  flex:1;background:none;border:none;border-radius:0;padding:0;
+  color:var(--text-3);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;font-size:11.5px;font-weight:500;letter-spacing:.02em;height:var(--nav-h);
+}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--accent)}
+
+.view{display:none}
+.view.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
+  transform:translateX(-50%);background:var(--text);color:var(--bg);
+  padding:11px 20px;border-radius:999px;font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;white-space:nowrap;
+}
+.toast.show{opacity:1}
+
+.disclaimer{font-size:12.5px;color:var(--text-3);line-height:1.6;padding:22px 0 30px}
+
+@media (max-width:400px){
+  .wrap{padding:0 13px}
+  .ring-wrap{width:196px;height:196px}
+  .ring-center .big{font-size:60px}
+  .togs{grid-template-columns:1fr}
+  .row3{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff;color:#000;padding:0}
+  nav,.noprint{display:none!important}
+  .view{display:block!important}
+  #report{background:#fff;color:#000;max-height:none;padding:0;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar noprint">
+  <div>
+    <div class="day" id="top-day">—</div>
+    <div class="brand">Adem</div>
+  </div>
+  <div class="streak"><b id="top-count">0</b> dagen</div>
+</div>
+
+<div class="wrap">
+
+  <div id="banner" class="note warn noprint" style="display:none;margin-top:16px"></div>
+
+  <!-- ===================== VANDAAG ===================== -->
+  <div class="view on" id="v-today">
+
+    <div class="hero">
+      <div class="ring-wrap">
+        <svg width="216" height="216" viewBox="0 0 216 216">
+          <circle cx="108" cy="108" r="92" stroke="#1C242D" stroke-width="15" fill="none"/>
+          <circle cx="108" cy="108" r="92" id="ring-arc" stroke="var(--good)" stroke-width="15"
+                  fill="none" stroke-linecap="round" stroke-dasharray="578" stroke-dashoffset="578"
+                  style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1), stroke .4s"/>
+          <circle cx="108" cy="108" r="73" stroke="#1C242D" stroke-width="5" fill="none"/>
+          <circle cx="108" cy="108" r="73" id="ring-med" stroke="var(--accent)" stroke-width="5"
+                  fill="none" stroke-linecap="round" stroke-dasharray="459" stroke-dashoffset="459"
+                  style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>
+        </svg>
+        <div class="ring-center">
+          <div class="big" id="ring-val">—</div>
+          <div class="cap">klachtscore</div>
+          <div class="verdict" id="ring-verdict">nog niets ingevuld</div>
+        </div>
+      </div>
+      <div class="hint" id="ring-hint">binnenring: vaste medicatie</div>
+    </div>
+
+    <div class="tiles" style="margin-top:16px">
+      <div class="tile"><div class="k">Ochtend</div><div class="v" id="t-am">—</div><div class="s">benauwdheid</div></div>
+      <div class="tile"><div class="k">Avond</div><div class="v" id="t-pm">—</div><div class="s">benauwdheid</div></div>
+      <div class="tile"><div class="k">Spanning</div><div class="v" id="t-tens">—</div><div class="s">middenrif + nek</div></div>
+    </div>
+
+    <h2>Dag invullen</h2>
+
+    <div class="card">
+      <div class="row2">
+        <label class="fld" style="margin:0"><span>Datum</span><input type="date" id="f-date"></label>
+        <label class="fld" style="margin:0"><span>Regio</span><input type="text" id="f-region" value="Haarlem"></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Klachten <span class="sub">0 = vrij · 10 = zwaar</span></h3>
+      <div id="scales"></div>
+    </div>
+
+    <div class="card">
+      <h3>Vaste medicatie</h3>
+      <div class="togs" id="meds"></div>
+    </div>
+
+    <div class="card">
+      <h3>Extra genomen bij klachten</h3>
+      <div class="togs" id="rescue"></div>
+      <label class="fld" style="margin:12px 0 0"><span>Salbutamol — puffs</span>
+        <input type="number" id="f-salb-puffs" min="0" step="1" value="0" inputmode="numeric"></label>
+    </div>
+
+    <div class="card">
+      <h3>Houding &amp; ademhaling</h3>
+      <div class="togs">
+        <label class="tog wide" id="posture-chip">
+          <input type="checkbox" id="f-posture">
+          <span class="box"><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="#0A0C0F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="lbl">Bewust op houding en ademhaling gestuurd</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Whoop <span class="sub">herstel plus je twee luchtwegwaarden</span></h3>
+      <div class="row3">
+        <label class="fld" style="margin:0"><span>Recovery %</span><input type="number" id="w-recovery" step="1" inputmode="numeric" placeholder="70"></label>
+        <label class="fld" style="margin:0"><span>Ademfreq /min</span><input type="number" id="w-resp" step="0.1" inputmode="decimal" placeholder="14.8"></label>
+        <label class="fld" style="margin:0"><span>SpO₂ %</span><input type="number" id="w-spo2" step="0.1" inputmode="decimal" placeholder="96"></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Weer &amp; pollen <span class="sub" id="wx-status">Haarlem</span></h3>
+      <button class="ghost" id="btn-wx" type="button" style="margin-bottom:14px">Ophalen voor deze datum</button>
+      <div class="row3">
+        <label class="fld"><span>Max temp °C</span><input type="number" id="x-temp" step="0.1" inputmode="decimal"></label>
+        <label class="fld"><span>Neerslag mm</span><input type="number" id="x-precip" step="0.1" inputmode="decimal"></label>
+        <label class="fld"><span>Gras</span><input type="number" id="x-grass" step="0.1" inputmode="decimal"></label>
+        <label class="fld"><span>Bijvoet</span><input type="number" id="x-mugwort" step="0.1" inputmode="decimal"></label>
+        <label class="fld"><span>Ambrosia</span><input type="number" id="x-ragweed" step="0.1" inputmode="decimal"></label>
+        <label class="fld" style="margin:0"><span>Berk</span><input type="number" id="x-birch" step="0.1" inputmode="decimal"></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Notitie</h3>
+      <textarea id="f-note" placeholder="Wat viel op? Weer, inspanning, slaap, omgeving…"></textarea>
+    </div>
+
+    <div class="stack" style="margin-bottom:8px">
+      <button id="btn-save" type="button">Dag opslaan</button>
+      <div class="inline">
+        <button class="ghost" id="btn-clear" type="button">Leegmaken</button>
+        <button class="danger" id="btn-delete" type="button">Dag wissen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== TRENDS ===================== -->
+  <div class="view" id="v-trends">
+    <h2 style="margin-top:20px">Verloop</h2>
+    <div class="card">
+      <div class="stripbox" id="stripbox">
+        <div class="strip" id="strip"></div>
+        <div class="axis" id="strip-axis"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--good)"></i>weinig klachten</span>
+        <span><i style="background:var(--mid)"></i>matig</span>
+        <span><i style="background:var(--bad)"></i>veel</span>
+        <span><i style="background:var(--accent)"></i>medicatie compleet</span>
+        <span><i style="background:#7A6BFF"></i>extra medicatie</span>
+        <span><i style="background:#FFFFFF"></i>houdingswerk</span>
+      </div>
+      <div class="readout" id="readout">Tik op een dag voor details.</div>
+    </div>
+
+    <h2>Overzicht</h2>
+    <div class="tiles" id="summary-stats" style="margin-bottom:12px"></div>
+
+    <h2>Mogelijke samenhang <span id="corr-n" style="text-transform:none;letter-spacing:0;font-family:Inter;font-weight:400"></span></h2>
+    <div class="card">
+      <table>
+        <thead><tr><th>Factor</th><th style="text-align:right">Zelfde dag</th><th style="text-align:right">Dag ervoor</th><th style="text-align:right">n</th></tr></thead>
+        <tbody id="corr-body"></tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <b>Richtingaanwijzer, geen bewijs.</b> Samenhang is geen oorzaak — temperatuur, pollen en neerslag lopen onderling mee. Onder de 14 dagen zegt dit vrijwel niets; vanaf ongeveer 30 dagen wordt een sterk verband het bespreken waard.
+    </div>
+  </div>
+
+  <!-- ===================== VERSLAG ===================== -->
+  <div class="view" id="v-report">
+    <h2 style="margin-top:20px">Voor de huisarts</h2>
+    <div class="inline noprint" style="margin-bottom:12px">
+      <button id="btn-report" type="button">Opstellen</button>
+      <button class="ghost" id="btn-print" type="button">Pdf</button>
+      <button class="ghost" id="btn-copy" type="button">Kopiëren</button>
+    </div>
+    <div id="report">Nog geen verslag opgesteld.</div>
+  </div>
+
+  <!-- ===================== DATA ===================== -->
+  <div class="view" id="v-data">
+    <h2 style="margin-top:20px">Gegevens</h2>
+    <div class="note" style="margin-bottom:12px">
+      Alles blijft op dit apparaat. Er gaat niets naar een server, behalve als je zelf het weer ophaalt. Zet regelmatig een reservekopie weg.
+    </div>
+    <div class="stack" style="margin-bottom:8px">
+      <button class="ghost" id="btn-json" type="button">Reservekopie opslaan</button>
+      <div class="inline">
+        <button class="ghost" id="btn-csv" type="button">Csv</button>
+        <button class="ghost" id="btn-import" type="button">Terugzetten</button>
+      </div>
+      <button class="ghost" id="btn-claude" type="button">Samenvatting voor Claude kopiëren</button>
+      <input type="file" id="file-import" accept=".json" style="display:none">
+    </div>
+
+    <h2>Uitproberen</h2>
+    <div class="card">
+      <div class="note" style="margin-bottom:12px">
+        Zet zeven testdagen klaar om te controleren of opslag werkt. Sluit daarna de app helemaal af en open hem opnieuw — staan de dagen er nog, dan werkt het op dit apparaat. Wis ze voordat je echt begint.
+      </div>
+      <div class="inline">
+        <button class="ghost" id="btn-demo" type="button">Testweek toevoegen</button>
+        <button class="danger" id="btn-demo-clear" type="button">Testdagen wissen</button>
+      </div>
+    </div>
+
+    <h2>Herstelpunten</h2>
+    <div class="card"><table><tbody id="snap-body"></tbody></table></div>
+
+    <div class="disclaimer">
+      Dit is een dagboek om je eigen waarnemingen vast te leggen en mee te nemen naar je huisarts. Het stelt geen diagnose en geeft geen medicatieadvies. Wijzig je medicatie alleen in overleg met je arts. Bij plotseling toenemende benauwdheid, of als je vaker naar salbutamol grijpt dan je gewend bent, neem contact op met je huisarts of huisartsenpost.
+    </div>
+  </div>
+
+</div>
+
+<nav class="noprint">
+  <button data-v="v-today" class="on"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg>Vandaag</button>
+  <button data-v="v-trends"><svg viewBox="0 0 24 24"><path d="M4 19V9M9.5 19V5M15 19v-7M20.5 19v-4"/></svg>Trends</button>
+  <button data-v="v-report"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Verslag</button>
+  <button data-v="v-data"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"/></svg>Gegevens</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   DATACONTRACT — NIET WIJZIGEN BIJ LATERE AANPASSINGEN
+
+   STORE_KEY is de plek waar alle dagen staan. Zolang deze sleutel gelijk
+   blijft, overleeft je invoer elke wijziging aan de app.
+
+   Regels voor toekomstige versies:
+   1. Voeg velden toe, verwijder ze nooit.
+   2. Onbekende velden in een dag blijven staan (zie opslaan: samenvoegen).
+   3. Verhoog SCHEMA alleen, en vang oude vormen op in migrate().
+   4. Bij opslaan gaat er altijd een kopie naar MIRROR_KEY en een
+      dagelijks herstelpunt naar SNAP_KEY.
+   ========================================================================= */
+const STORE_KEY  = "ademlogboek.v1";
+const MIRROR_KEY = "ademlogboek.v1.mirror";
+const SNAP_KEY   = "ademlogboek.snapshots";
+const META_KEY   = "ademlogboek.meta";
+const SCHEMA     = 1;
+const MAX_SNAPS  = 12;
+
+const LAT = 52.3874, LON = 4.6462; // Haarlem
+
+const MEDS = [
+  {id:"foster",        label:"Foster"},
+  {id:"dymista",       label:"Dymista"},
+  {id:"montelukast",   label:"Montelukast"},
+  {id:"desloratadine", label:"Desloratadine"},
+];
+const RESCUE = [
+  {id:"r_salbutamol", label:"Salbutamol"},
+  {id:"r_foster",     label:"Foster extra"},
+  {id:"r_dymista",    label:"Dymista extra"},
+];
+const SCALES = [
+  {id:"breathAM",  label:"Benauwdheid ochtend",  lo:"vrij", hi:"zwaar"},
+  {id:"breathPM",  label:"Benauwdheid avond",    lo:"vrij", hi:"zwaar"},
+  {id:"diaphragm", label:"Spanning middenrif",   lo:"los",  hi:"strak"},
+  {id:"shoulders", label:"Spanning schouders/nek",lo:"los", hi:"strak"},
+];
+
+let days = {};
+let recoveryMessage = "";
+
+const $ = id => document.getElementById(id);
+const todayISO = () => new Date().toLocaleDateString("sv-SE");
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+function num(v){ const n = parseFloat(v); return isFinite(n) ? n : null; }
+function fmtDayShort(iso){
+  return new Date(iso+"T12:00:00").toLocaleDateString("nl-NL",{day:"2-digit",month:"short"});
+}
+function scoreColor(s){
+  if(s < 3) return getComputedStyle(document.documentElement).getPropertyValue("--good").trim();
+  if(s < 6) return getComputedStyle(document.documentElement).getPropertyValue("--mid").trim();
+  return getComputedStyle(document.documentElement).getPropertyValue("--bad").trim();
+}
+function scoreWord(s){
+  if(s < 2) return "rustige dag";
+  if(s < 4) return "licht";
+  if(s < 6) return "merkbaar";
+  if(s < 8) return "zwaar";
+  return "erg zwaar";
+}
+
+/* ---------- opslag ---------- */
+function readKey(key){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return null;
+    const j = JSON.parse(raw);
+    const d = j && j.days ? j.days : j;
+    if(!d || typeof d !== "object" || Array.isArray(d)) return null;
+    const ok = Object.keys(d).every(k => /^\d{4}-\d{2}-\d{2}$/.test(k));
+    return ok ? d : null;
+  }catch(e){ return null; }
+}
+function migrate(entry){
+  const e = Object.assign({}, entry);
+  e.meds   = Object.assign({}, e.meds);
+  e.rescue = Object.assign({puffs:0}, e.rescue);
+  e.whoop  = Object.assign({}, e.whoop);
+  e.wx     = Object.assign({}, e.wx);
+  SCALES.forEach(s => { if(typeof e[s.id] !== "number") e[s.id] = 0; });
+  if(typeof e.posture !== "boolean") e.posture = false;
+  if(typeof e.note !== "string") e.note = "";
+  if(!e.region) e.region = "Haarlem";
+  return e;
+}
+function snapshots(){
+  try{ return JSON.parse(localStorage.getItem(SNAP_KEY)) || []; }catch(e){ return []; }
+}
+function load(){
+  let d = readKey(STORE_KEY), from = "";
+  if(!d){ d = readKey(MIRROR_KEY); if(d) from = "de reservekopie in deze browser"; }
+  if(!d){
+    const s = snapshots();
+    if(s.length){ d = s[s.length-1].days; from = "het herstelpunt van " + s[s.length-1].at.slice(0,10); }
+  }
+  days = {};
+  for(const [k,v] of Object.entries(d || {})) days[k] = migrate(v);
+  if(from && Object.keys(days).length){
+    recoveryMessage = `De hoofdopslag was leeg. Je gegevens zijn teruggehaald uit ${from}.`;
+  }
+}
+function save(){
+  const payload = JSON.stringify({schema:SCHEMA, savedAt:new Date().toISOString(), days});
+  let ok = false;
+  try{ localStorage.setItem(STORE_KEY, payload); ok = true; }
+  catch(e){ toast("Opslaan mislukt — maak een reservekopie"); }
+  try{ localStorage.setItem(MIRROR_KEY, payload); }catch(e){}
+  try{
+    const snaps = snapshots(), today = todayISO();
+    if(!snaps.length || snaps[snaps.length-1].at.slice(0,10) !== today){
+      snaps.push({at:new Date().toISOString(), days:JSON.parse(JSON.stringify(days))});
+      while(snaps.length > MAX_SNAPS) snaps.shift();
+      localStorage.setItem(SNAP_KEY, JSON.stringify(snaps));
+    }
+  }catch(e){}
+  return ok;
+}
+function meta(){ try{ return JSON.parse(localStorage.getItem(META_KEY)) || {}; }catch(e){ return {}; } }
+function setMeta(p){ try{ localStorage.setItem(META_KEY, JSON.stringify(Object.assign(meta(), p))); }catch(e){} }
+
+/* ---------- formulier ---------- */
+const CHECK = `<span class="box"><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="#0A0C0F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+
+function buildForm(){
+  $("meds").innerHTML = MEDS.map(m =>
+    `<label class="tog" data-chip="${m.id}"><input type="checkbox" id="m-${m.id}">${CHECK}<span class="lbl">${m.label}</span></label>`).join("");
+  $("rescue").innerHTML = RESCUE.map(m =>
+    `<label class="tog rescue" data-chip="${m.id}"><input type="checkbox" id="m-${m.id}">${CHECK}<span class="lbl">${m.label}</span></label>`).join("");
+  $("scales").innerHTML = SCALES.map((s,i) => `
+    <div class="sl" ${i===SCALES.length-1?'style="margin-bottom:0"':''}>
+      <div class="top"><span class="nm">${s.label}</span><span class="val" id="v-${s.id}">0</span></div>
+      <input type="range" id="s-${s.id}" min="0" max="10" step="1" value="0">
+      <div class="ends"><span>${s.lo}</span><span>${s.hi}</span></div>
+    </div>`).join("");
+
+  document.querySelectorAll(".tog").forEach(t => {
+    const box = t.querySelector("input");
+    const sync = () => t.classList.toggle("on", box.checked);
+    box.addEventListener("change", sync); sync();
+  });
+  SCALES.forEach(s => {
+    const r = $("s-"+s.id);
+    r.addEventListener("input", () => { $("v-"+s.id).textContent = r.value; previewRing(); });
+  });
+}
+
+function readForm(){
+  const e = { date: $("f-date").value, region: $("f-region").value.trim() || "Haarlem" };
+  e.meds = {};   MEDS.forEach(m => e.meds[m.id] = $("m-"+m.id).checked);
+  e.rescue = {}; RESCUE.forEach(m => e.rescue[m.id] = $("m-"+m.id).checked);
+  e.rescue.puffs = num($("f-salb-puffs").value) || 0;
+  SCALES.forEach(s => e[s.id] = parseInt($("s-"+s.id).value,10));
+  e.posture = $("f-posture").checked;
+  e.whoop = {recovery:num($("w-recovery").value), resp:num($("w-resp").value), spo2:num($("w-spo2").value)};
+  e.wx = {temp:num($("x-temp").value), precip:num($("x-precip").value), grass:num($("x-grass").value),
+          mugwort:num($("x-mugwort").value), ragweed:num($("x-ragweed").value), birch:num($("x-birch").value)};
+  e.note = $("f-note").value.trim();
+  return e;
+}
+
+function fillForm(iso){
+  $("f-date").value = iso;
+  const e = days[iso];
+  const set = (id,v) => { $(id).value = (v===null||v===undefined) ? "" : v; };
+  MEDS.forEach(m => $("m-"+m.id).checked = e ? !!e.meds?.[m.id] : false);
+  RESCUE.forEach(m => $("m-"+m.id).checked = e ? !!e.rescue?.[m.id] : false);
+  set("f-salb-puffs", e ? (e.rescue?.puffs ?? 0) : 0);
+  SCALES.forEach(s => { const v = e ? (e[s.id] ?? 0) : 0; $("s-"+s.id).value = v; $("v-"+s.id).textContent = v; });
+  $("f-posture").checked = e ? !!e.posture : false;
+  set("w-recovery", e?.whoop?.recovery); set("w-resp", e?.whoop?.resp); set("w-spo2", e?.whoop?.spo2);
+  set("x-temp", e?.wx?.temp); set("x-precip", e?.wx?.precip); set("x-grass", e?.wx?.grass);
+  set("x-mugwort", e?.wx?.mugwort); set("x-ragweed", e?.wx?.ragweed); set("x-birch", e?.wx?.birch);
+  $("f-note").value = e?.note || "";
+  set("f-region", e?.region || "Haarlem");
+  document.querySelectorAll(".tog").forEach(t => t.classList.toggle("on", t.querySelector("input").checked));
+  previewRing();
+}
+
+/* ---------- afgeleide waarden ---------- */
+const symptomScore = e => (e.breathAM + e.breathPM + e.diaphragm + e.shoulders) / 4;
+const medsComplete = e => MEDS.every(m => e.meds?.[m.id]);
+const medsFraction = e => MEDS.filter(m => e.meds?.[m.id]).length / MEDS.length;
+const usedRescue   = e => RESCUE.some(m => e.rescue?.[m.id]) || (e.rescue?.puffs > 0);
+const pollenMax    = e => {
+  const v = [e.wx?.grass, e.wx?.mugwort, e.wx?.ragweed, e.wx?.birch].filter(x => x !== null && x !== undefined);
+  return v.length ? Math.max(...v) : null;
+};
+const sortedDates = () => Object.keys(days).sort();
+
+/* ---------- ring ---------- */
+const C_OUT = 2*Math.PI*92, C_IN = 2*Math.PI*73;
+function previewRing(){
+  const live = {
+    breathAM: +$("s-breathAM").value, breathPM: +$("s-breathPM").value,
+    diaphragm:+$("s-diaphragm").value, shoulders:+$("s-shoulders").value,
+    meds:{}
+  };
+  MEDS.forEach(m => live.meds[m.id] = $("m-"+m.id).checked);
+  const saved = days[$("f-date").value];
+  const touched = live.breathAM||live.breathPM||live.diaphragm||live.shoulders||medsFraction(live)>0;
+  drawRing((touched || saved) ? live : null);
+}
+function drawRing(e){
+  if(!e){
+    $("ring-arc").style.strokeDashoffset = C_OUT;
+    $("ring-med").style.strokeDashoffset = C_IN;
+    $("ring-val").textContent = "—";
+    $("ring-verdict").textContent = "nog niets ingevuld";
+    $("ring-verdict").style.color = "var(--text-3)";
+    $("t-am").textContent = $("t-pm").textContent = $("t-tens").textContent = "—";
+    return;
+  }
+  const s = symptomScore(e);
+  const col = scoreColor(s);
+  $("ring-arc").style.strokeDashoffset = C_OUT * (1 - s/10);
+  $("ring-arc").setAttribute("stroke", col);
+  $("ring-med").style.strokeDashoffset = C_IN * (1 - medsFraction(e));
+  $("ring-val").textContent = s.toFixed(1);
+  $("ring-val").style.color = col;
+  $("ring-verdict").textContent = scoreWord(s);
+  $("ring-verdict").style.color = col;
+  $("t-am").textContent = e.breathAM;
+  $("t-pm").textContent = e.breathPM;
+  $("t-tens").textContent = ((e.diaphragm + e.shoulders)/2).toFixed(1);
+  const done = MEDS.filter(m => e.meds?.[m.id]).length;
+  $("ring-hint").textContent = `binnenring: ${done} van ${MEDS.length} vaste medicijnen`;
+}
+
+/* ---------- strook ---------- */
+function renderStrip(){
+  const dates = sortedDates();
+  const strip = $("strip"), axis = $("strip-axis");
+  if(!dates.length){
+    strip.innerHTML = `<div style="color:var(--text-3);font-size:13px;align-self:center">Nog geen dagen. Vul je eerste dag in bij Vandaag.</div>`;
+    axis.innerHTML = ""; return;
+  }
+  const all = [];
+  const first = new Date(dates[0]+"T12:00:00"), last = new Date(dates[dates.length-1]+"T12:00:00");
+  for(let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) all.push(d.toLocaleDateString("sv-SE"));
+  const H = 96;
+  strip.innerHTML = all.map(iso => {
+    const e = days[iso];
+    if(!e) return `<div class="col empty" data-d="${iso}"><div class="bar"></div><div class="dots"></div></div>`;
+    const s = symptomScore(e);
+    const h = Math.max(6, Math.round((s/10)*H));
+    const dots = [
+      medsComplete(e) ? `<div class="dot" style="background:var(--accent)"></div>` : "",
+      usedRescue(e)   ? `<div class="dot" style="background:#7A6BFF"></div>` : "",
+      e.posture       ? `<div class="dot" style="background:#fff"></div>` : "",
+    ].join("");
+    return `<div class="col" data-d="${iso}"><div class="bar" style="height:${h}px;background:${scoreColor(s)}"></div><div class="dots">${dots}</div></div>`;
+  }).join("");
+  axis.innerHTML = all.map((iso,i) => {
+    const d = new Date(iso+"T12:00:00");
+    return `<div class="t">${(i===0||d.getDate()===1||d.getDay()===1) ? d.getDate() : ""}</div>`;
+  }).join("");
+  strip.querySelectorAll(".col").forEach(col => {
+    const iso = col.dataset.d;
+    col.addEventListener("mouseenter", () => showReadout(iso));
+    col.addEventListener("click", () => showReadout(iso));
+  });
+  $("stripbox").scrollLeft = strip.scrollWidth;
+}
+function showReadout(iso){
+  const e = days[iso];
+  const d = new Date(iso+"T12:00:00").toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
+  if(!e){ $("readout").innerHTML = `<b>${d}</b> — niets vastgelegd`; return; }
+  const b = [];
+  b.push(`score ${symptomScore(e).toFixed(1)}`);
+  b.push(`ochtend ${e.breathAM} · avond ${e.breathPM}`);
+  b.push(`middenrif ${e.diaphragm} · nek ${e.shoulders}`);
+  b.push(medsComplete(e) ? "medicatie compleet" : "medicatie niet compleet");
+  if(usedRescue(e)) b.push(`extra medicatie${e.rescue.puffs ? ` (${e.rescue.puffs} puffs)` : ""}`);
+  if(e.posture) b.push("houdingswerk");
+  if(e.wx?.temp !== null && e.wx?.temp !== undefined) b.push(`${e.wx.temp}°C`);
+  if(e.wx?.precip) b.push(`${e.wx.precip} mm`);
+  const pm = pollenMax(e); if(pm !== null) b.push(`pollen ${pm}`);
+  if(e.whoop?.recovery) b.push(`recovery ${e.whoop.recovery}%`);
+  if(e.whoop?.resp) b.push(`ademfreq ${e.whoop.resp}`);
+  if(e.whoop?.spo2) b.push(`SpO₂ ${e.whoop.spo2}%`);
+  $("readout").innerHTML = `<b>${d}</b> — ${b.join(" · ")}` +
+    (e.note ? `<br><span style="color:var(--text-3)">${e.note.replace(/</g,"&lt;")}</span>` : "");
+}
+
+/* ---------- analyse ---------- */
+function pearson(pairs){
+  const n = pairs.length;
+  if(n < 4) return null;
+  const mx = pairs.reduce((a,p)=>a+p[0],0)/n, my = pairs.reduce((a,p)=>a+p[1],0)/n;
+  let sxy=0,sxx=0,syy=0;
+  for(const [x,y] of pairs){ const dx=x-mx, dy=y-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; }
+  if(sxx===0||syy===0) return null;
+  return sxy/Math.sqrt(sxx*syy);
+}
+const FACTORS = [
+  {label:"Recovery",       get:e=>e.whoop?.recovery},
+  {label:"Ademfrequentie", get:e=>e.whoop?.resp},
+  {label:"SpO₂",           get:e=>e.whoop?.spo2},
+  {label:"Max temperatuur",get:e=>e.wx?.temp},
+  {label:"Neerslag",       get:e=>e.wx?.precip},
+  {label:"Pollen",         get:e=>pollenMax(e)},
+  {label:"Medicatie compleet", get:e=>medsComplete(e)?1:0},
+  {label:"Houdingswerk",   get:e=>e.posture?1:0},
+];
+function renderAnalysis(){
+  const dates = sortedDates(), n = dates.length;
+  $("corr-n").textContent = n < 14 ? `— ${n} dagen, te weinig` : `— ${n} dagen`;
+
+  const scores = dates.map(d => symptomScore(days[d]));
+  const mean = scores.length ? scores.reduce((a,b)=>a+b,0)/scores.length : 0;
+  const rescueDays = dates.filter(d => usedRescue(days[d])).length;
+  const adherence = n ? Math.round(100*dates.filter(d=>medsComplete(days[d])).length/n) : 0;
+  const avg = arr => arr.length ? arr.reduce((a,d)=>a+symptomScore(days[d]),0)/arr.length : null;
+  const pA = avg(dates.filter(d=>days[d].posture)), nA = avg(dates.filter(d=>!days[d].posture));
+
+  $("summary-stats").innerHTML = `
+    <div class="tile"><div class="k">Gemiddeld</div><div class="v" style="color:${scores.length?scoreColor(mean):"var(--text-3)"}">${scores.length?mean.toFixed(1):"—"}</div><div class="s">klachtscore</div></div>
+    <div class="tile"><div class="k">Extra medicatie</div><div class="v">${rescueDays}</div><div class="s">van ${n} dagen</div></div>
+    <div class="tile"><div class="k">Therapietrouw</div><div class="v">${n?adherence:"—"}<span style="font-size:16px">%</span></div><div class="s">compleet</div></div>
+    <div class="tile"><div class="k">Houdingswerk</div><div class="v">${(pA!==null&&nA!==null)?pA.toFixed(1)+" / "+nA.toFixed(1):"—"}</div><div class="s">${(pA!==null&&nA!==null)?"met / zonder":"te weinig data"}</div></div>`;
+
+  const rows = FACTORS.map(f => {
+    const same=[], lag=[];
+    dates.forEach(d => {
+      const v = f.get(days[d]);
+      if(v!==null&&v!==undefined) same.push([v, symptomScore(days[d])]);
+      const p = new Date(d+"T12:00:00"); p.setDate(p.getDate()-1);
+      const pIso = p.toLocaleDateString("sv-SE");
+      if(days[pIso]){ const pv = f.get(days[pIso]); if(pv!==null&&pv!==undefined) lag.push([pv, symptomScore(days[d])]); }
+    });
+    return {label:f.label, r0:pearson(same), r1:pearson(lag), n:same.length};
+  });
+  const cell = r => r===null ? `<td class="n r-lo">—</td>`
+    : `<td class="n ${Math.abs(r)>=.5?"r-hi":(Math.abs(r)>=.3?"":"r-lo")}">${r>0?"+":""}${r.toFixed(2)}</td>`;
+  $("corr-body").innerHTML = rows.map(r =>
+    `<tr class="${r.n<6?"faint":""}"><td>${r.label}</td>${cell(r.r0)}${cell(r.r1)}<td class="n r-lo">${r.n}</td></tr>`).join("");
+}
+
+/* ---------- weer ---------- */
+async function fetchWeather(){
+  const iso = $("f-date").value;
+  if(!iso){ toast("Kies eerst een datum"); return; }
+  $("wx-status").textContent = "ophalen…";
+  const q = `latitude=${LAT}&longitude=${LON}&start_date=${iso}&end_date=${iso}&timezone=Europe%2FAmsterdam`;
+  const got = [];
+  try{
+    const j = await (await fetch(`https://api.open-meteo.com/v1/forecast?${q}&daily=temperature_2m_max,precipitation_sum`)).json();
+    if(j?.daily?.temperature_2m_max?.[0] != null){ $("x-temp").value = j.daily.temperature_2m_max[0]; got.push("temp"); }
+    if(j?.daily?.precipitation_sum?.[0] != null){ $("x-precip").value = j.daily.precipitation_sum[0]; got.push("neerslag"); }
+  }catch(e){}
+  try{
+    const j2 = await (await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${q}&hourly=grass_pollen,mugwort_pollen,ragweed_pollen,birch_pollen`)).json();
+    const dayMax = k => {
+      const a = j2?.hourly?.[k];
+      if(!Array.isArray(a)) return null;
+      const v = a.filter(x => x != null);
+      return v.length ? Math.max(...v) : null;
+    };
+    let any = false;
+    for(const [f,k] of Object.entries({grass:"grass_pollen",mugwort:"mugwort_pollen",ragweed:"ragweed_pollen",birch:"birch_pollen"})){
+      const v = dayMax(k);
+      if(v !== null){ $("x-"+f).value = Math.round(v*10)/10; any = true; }
+    }
+    if(any) got.push("pollen");
+  }catch(e){}
+  if(got.length){ $("wx-status").textContent = got.join(" · ") + " ingevuld"; toast("Weerdata ingevuld"); }
+  else{ $("wx-status").textContent = "niet gelukt — vul handmatig in"; toast("Ophalen niet gelukt"); }
+}
+
+/* ---------- verslag ---------- */
+function buildReport(){
+  const dates = sortedDates();
+  if(!dates.length){ $("report").textContent = "Nog geen dagen vastgelegd."; return; }
+  const n = dates.length;
+  const scores = dates.map(d => symptomScore(days[d]));
+  const mean = scores.reduce((a,b)=>a+b,0)/n;
+  const worst = dates.map(d=>({d,s:symptomScore(days[d])})).sort((a,b)=>b.s-a.s).slice(0,5);
+  const rescueDays = dates.filter(d=>usedRescue(days[d]));
+  const totalPuffs = dates.reduce((a,d)=>a+(days[d].rescue?.puffs||0),0);
+  const adherence = Math.round(100*dates.filter(d=>medsComplete(days[d])).length/n);
+  const missing = MEDS.map(m=>({label:m.label, miss:dates.filter(d=>!days[d].meds?.[m.id]).length})).filter(x=>x.miss>0);
+  const mAvg = k => dates.reduce((a,d)=>a+days[d][k],0)/n;
+  const avgOf = arr => arr.length ? arr.reduce((a,d)=>a+symptomScore(days[d]),0)/arr.length : null;
+  const postD = dates.filter(d=>days[d].posture), noD = dates.filter(d=>!days[d].posture);
+  const corr = FACTORS.map(f=>{
+    const p=[]; dates.forEach(d=>{ const v=f.get(days[d]); if(v!=null) p.push([v,symptomScore(days[d])]); });
+    return {label:f.label, r:pearson(p), n:p.length};
+  }).filter(x=>x.r!==null&&x.n>=6).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r)).slice(0,5);
+  const notes = dates.filter(d=>days[d].note).slice(-8).map(d=>`  ${fmtDayShort(d)} — ${days[d].note}`).join("\n");
+
+  const L = [];
+  L.push("ADEMLOGBOEK — SAMENVATTING VOOR DE HUISARTS");
+  L.push("=".repeat(50));
+  L.push(`Periode   ${fmtDayShort(dates[0])} t/m ${fmtDayShort(dates[n-1])}  (${n} dagen)`);
+  L.push(`Opgesteld ${new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"})}`);
+  L.push("");
+  L.push("KLACHTEN (0-10, hoger is meer klachten)");
+  L.push("-".repeat(50));
+  L.push(`Gemiddelde klachtscore      ${mean.toFixed(1)}`);
+  L.push(`Benauwdheid ochtend         ${mAvg("breathAM").toFixed(1)}`);
+  L.push(`Benauwdheid avond           ${mAvg("breathPM").toFixed(1)}`);
+  L.push(`Spanning middenrif          ${mAvg("diaphragm").toFixed(1)}`);
+  L.push(`Spanning schouders/nek      ${mAvg("shoulders").toFixed(1)}`);
+  L.push("");
+  L.push("Zwaarste dagen:");
+  worst.forEach(w=>{
+    const e = days[w.d], x = [];
+    if(usedRescue(e)) x.push("extra medicatie");
+    if(e.wx?.temp != null) x.push(`${e.wx.temp}°C`);
+    const pm = pollenMax(e); if(pm !== null) x.push(`pollen ${pm}`);
+    L.push(`  ${fmtDayShort(w.d)}  score ${w.s.toFixed(1)}${x.length?"  ("+x.join(", ")+")":""}`);
+  });
+  L.push("");
+  L.push("MEDICATIE");
+  L.push("-".repeat(50));
+  L.push(`Vaste medicatie compleet op   ${adherence}% van de dagen`);
+  if(missing.length){ L.push("Gemiste dagen per middel:"); missing.forEach(m=>L.push(`  ${m.label.padEnd(16)} ${m.miss} van ${n}`)); }
+  L.push(`Dagen met extra medicatie     ${rescueDays.length} van ${n}`);
+  L.push(`Totaal salbutamol             ${totalPuffs} puffs`);
+  if(rescueDays.length){ L.push("Data extra medicatie:"); L.push("  " + rescueDays.map(fmtDayShort).join(", ")); }
+  L.push("");
+  L.push("HOUDING EN ADEMHALING");
+  L.push("-".repeat(50));
+  const pA = avgOf(postD), nA = avgOf(noD);
+  L.push(`Dagen met bewust houdings-/ademwerk  ${postD.length} van ${n}`);
+  if(pA!==null&&nA!==null){
+    L.push(`Gem. klachtscore met houdingswerk    ${pA.toFixed(1)}`);
+    L.push(`Gem. klachtscore zonder              ${nA.toFixed(1)}`);
+    L.push(`Verschil                             ${(nA-pA).toFixed(1)}`);
+  }else L.push("Nog te weinig dagen in beide groepen voor een vergelijking.");
+  L.push("");
+  L.push("SAMENHANGEN (correlatie met klachtscore, zelfde dag)");
+  L.push("-".repeat(50));
+  if(corr.length){
+    corr.forEach(c=>L.push(`  ${c.label.padEnd(22)} r = ${c.r>0?"+":""}${c.r.toFixed(2)}  (n=${c.n})`));
+    L.push("");
+    L.push("  Let op: samenhang is geen oorzaak. Weersfactoren lopen");
+    L.push("  onderling mee en het aantal dagen is beperkt.");
+  }else L.push("  Nog te weinig gegevens.");
+  if(notes){ L.push(""); L.push("EIGEN NOTITIES"); L.push("-".repeat(50)); L.push(notes); }
+  L.push("");
+  L.push("=".repeat(50));
+  L.push("Zelf bijgehouden dagboek. Geen diagnose, geen medicatieadvies.");
+  $("report").textContent = L.join("\n");
+  toast("Verslag opgesteld");
+}
+
+/* ---------- export ---------- */
+function download(name, text, type){
+  const b = new Blob([text],{type}), u = URL.createObjectURL(b);
+  const a = document.createElement("a"); a.href = u; a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+function exportJSON(){
+  download(`ademlogboek-${todayISO()}.json`, JSON.stringify({schema:SCHEMA, days}, null, 2), "application/json");
+  setMeta({lastExport:new Date().toISOString()}); renderBanner(); toast("Reservekopie opgeslagen");
+}
+function exportCSV(){
+  const head = ["datum","klachtscore","benauwd_ochtend","benauwd_avond","middenrif","schouders",
+    ...MEDS.map(m=>m.label.toLowerCase()),"extra_medicatie","salbutamol_puffs","houdingswerk",
+    "recovery","ademfreq","spo2","temp_max","neerslag","gras","bijvoet","ambrosia","berk","notitie"];
+  const rows = sortedDates().map(d=>{
+    const e = days[d];
+    return [d, symptomScore(e).toFixed(2), e.breathAM, e.breathPM, e.diaphragm, e.shoulders,
+      ...MEDS.map(m=>e.meds?.[m.id]?1:0), usedRescue(e)?1:0, e.rescue?.puffs||0, e.posture?1:0,
+      e.whoop?.recovery??"", e.whoop?.resp??"", e.whoop?.spo2??"",
+      e.wx?.temp??"", e.wx?.precip??"", e.wx?.grass??"", e.wx?.mugwort??"", e.wx?.ragweed??"", e.wx?.birch??"",
+      `"${(e.note||"").replace(/"/g,'""')}"`].join(",");
+  });
+  download(`ademlogboek-${todayISO()}.csv`, [head.join(","),...rows].join("\n"), "text/csv");
+  toast("Csv opgeslagen");
+}
+function copyForClaude(){
+  const dates = sortedDates();
+  if(!dates.length){ toast("Nog geen dagen"); return; }
+  const head = "datum|klacht|ochtend|avond|middenrif|schouders|med_compleet|extra_med|puffs|houding|recovery|ademfreq|spo2|temp|neerslag|pollen_max|notitie";
+  const rows = dates.map(d=>{
+    const e = days[d];
+    return [d, symptomScore(e).toFixed(1), e.breathAM, e.breathPM, e.diaphragm, e.shoulders,
+      medsComplete(e)?1:0, usedRescue(e)?1:0, e.rescue?.puffs||0, e.posture?1:0,
+      e.whoop?.recovery??"", e.whoop?.resp??"", e.whoop?.spo2??"",
+      e.wx?.temp??"", e.wx?.precip??"", pollenMax(e)??"", (e.note||"").replace(/\|/g,"/")].join("|");
+  });
+  const txt = "Hier is mijn ademlogboek. Kijk mee naar patronen; wees kritisch over de betrouwbaarheid bij dit aantal dagen.\n\n" + head + "\n" + rows.join("\n");
+  navigator.clipboard.writeText(txt).then(()=>toast("Gekopieerd"),()=>toast("Kopiëren mislukt"));
+}
+function importJSON(file){
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{
+      const j = JSON.parse(rd.result), inc = j.days || j;
+      let added = 0;
+      for(const [k,v] of Object.entries(inc)){
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+        if(!days[k]){ days[k] = migrate(v); added++; }
+      }
+      save(); renderAll(); toast(`${added} dagen toegevoegd`);
+    }catch(e){ toast("Kon dit bestand niet lezen"); }
+  };
+  rd.readAsText(file);
+}
+
+/* ---------- testdagen ---------- */
+function demoWeek(){
+  const temp=[24,26,27,25,18,16,17], rain=[0,0,0,0,4.2,7.1,2.5];
+  const poll=[38,45,52,41,12,6,9], base=[5,6,7,6,4,3,3];
+  const resp=[15.8,16.2,16.9,16.1,14.9,14.4,14.5];
+  const spo2=[95,95,94,95,96,97,96];
+  const rec=[52,44,38,49,66,74,71];
+  let added=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(); d.setDate(d.getDate()-(6-i));
+    const iso=d.toLocaleDateString("sv-SE");
+    if(days[iso]) continue;
+    days[iso]=migrate({date:iso, region:"Haarlem", demo:true,
+      meds:{foster:i!==2, dymista:true, montelukast:true, desloratadine:i!==5},
+      rescue:{r_salbutamol:i===2, r_foster:false, r_dymista:false, puffs:i===2?2:0},
+      breathAM:base[i], breathPM:Math.max(0,base[i]-1), diaphragm:base[i]-1, shoulders:base[i],
+      posture:i>=4,
+      whoop:{recovery:rec[i], resp:resp[i], spo2:spo2[i]},
+      wx:{temp:temp[i], precip:rain[i], grass:poll[i], mugwort:Math.round(poll[i]*0.6), ragweed:2, birch:0},
+      note:i===4?"testdag — weer sloeg om, koud en regen":""});
+    added++;
+  }
+  save(); renderAll(); fillForm($("f-date").value || todayISO());
+  toast(added ? `${added} testdagen toegevoegd` : "Stonden er al");
+}
+function clearDemo(){
+  const n = Object.keys(days).filter(k=>days[k].demo).length;
+  if(!n){ toast("Geen testdagen gevonden"); return; }
+  if(!confirm(`${n} testdagen wissen? Eigen invoer blijft staan.`)) return;
+  Object.keys(days).forEach(k => { if(days[k].demo) delete days[k]; });
+  save(); renderAll(); fillForm($("f-date").value || todayISO());
+  toast(`${n} testdagen gewist`);
+}
+
+/* ---------- herstelpunten & banner ---------- */
+function renderSnapshots(){
+  const snaps = snapshots(), body = $("snap-body");
+  if(!snaps.length){
+    body.innerHTML = `<tr><td class="r-lo" style="border:none;font-size:13px">Nog geen herstelpunten. Er komt er één bij zodra je een dag opslaat.</td></tr>`;
+    return;
+  }
+  body.innerHTML = snaps.slice().reverse().map((s,i)=>{
+    const idx = snaps.length-1-i, d = new Date(s.at);
+    return `<tr><td style="font-size:13px">${d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"})} ${d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})}</td>
+      <td class="n r-lo">${Object.keys(s.days).length}d</td>
+      <td style="text-align:right"><button class="ghost sm" data-snap="${idx}">Terugzetten</button></td></tr>`;
+  }).join("");
+  body.querySelectorAll("[data-snap]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const s = snapshots()[+b.dataset.snap];
+      if(!s) return;
+      if(!confirm("Herstelpunt terugzetten? Dagen die je nu hebt blijven staan; ontbrekende dagen worden aangevuld.")) return;
+      let added = 0;
+      for(const [k,v] of Object.entries(s.days)){ if(!days[k]){ days[k] = migrate(v); added++; } }
+      save(); renderAll(); toast(`${added} dagen teruggezet`);
+    });
+  });
+}
+function renderBanner(){
+  const b = $("banner"), m = meta(), n = sortedDates().length, msgs = [];
+  if(recoveryMessage) msgs.push(`<b>Gegevens hersteld.</b> ${recoveryMessage}`);
+  if(n >= 5){
+    const last = m.lastExport ? new Date(m.lastExport) : null;
+    const ago = last ? Math.floor((Date.now()-last)/864e5) : null;
+    if(!last) msgs.push(`<b>Nog geen reservekopie.</b> Sla er één op bij Gegevens.`);
+    else if(ago >= 7) msgs.push(`<b>Laatste reservekopie is ${ago} dagen oud.</b> Sla er opnieuw één op bij Gegevens.`);
+  }
+  if(msgs.length){ b.innerHTML = msgs.join("<br>"); b.style.display = ""; }
+  else b.style.display = "none";
+}
+
+/* ---------- start ---------- */
+function renderAll(){
+  renderStrip(); renderAnalysis(); renderSnapshots(); renderBanner();
+  $("top-count").textContent = sortedDates().length;
+}
+function showView(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === id));
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.v === id));
+  window.scrollTo({top:0});
+}
+function init(){
+  load();
+  buildForm();
+  $("top-day").textContent = new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
+  fillForm(todayISO());
+  renderAll();
+
+  document.querySelectorAll("nav button").forEach(b =>
+    b.addEventListener("click", () => showView(b.dataset.v)));
+
+  $("f-date").addEventListener("change", e => fillForm(e.target.value));
+  $("f-posture").addEventListener("change", () =>
+    $("posture-chip").classList.toggle("on", $("f-posture").checked));
+  MEDS.forEach(m => $("m-"+m.id).addEventListener("change", previewRing));
+
+  $("btn-save").addEventListener("click", () => {
+    const e = readForm();
+    if(!e.date){ toast("Kies een datum"); return; }
+    const prev = days[e.date] || {};
+    // samenvoegen, niet vervangen: velden die deze versie niet kent blijven staan
+    days[e.date] = Object.assign({}, prev, e, {
+      meds:   Object.assign({}, prev.meds,   e.meds),
+      rescue: Object.assign({}, prev.rescue, e.rescue),
+      whoop:  Object.assign({}, prev.whoop,  e.whoop),
+      wx:     Object.assign({}, prev.wx,     e.wx),
+    });
+    if(save()){ renderAll(); fillForm(e.date); toast("Dag opgeslagen"); }
+  });
+  $("btn-clear").addEventListener("click", () => fillForm($("f-date").value || todayISO()));
+  $("btn-delete").addEventListener("click", () => {
+    const d = $("f-date").value;
+    if(!days[d]){ toast("Deze dag staat er niet in"); return; }
+    if(!confirm(`Dag ${fmtDayShort(d)} wissen?`)) return;
+    delete days[d]; save(); renderAll(); fillForm(d); toast("Dag gewist");
+  });
+  $("btn-wx").addEventListener("click", fetchWeather);
+  $("btn-report").addEventListener("click", buildReport);
+  $("btn-print").addEventListener("click", () => { buildReport(); window.print(); });
+  $("btn-copy").addEventListener("click", () =>
+    navigator.clipboard.writeText($("report").textContent).then(()=>toast("Gekopieerd"),()=>toast("Kopiëren mislukt")));
+  $("btn-json").addEventListener("click", exportJSON);
+  $("btn-csv").addEventListener("click", exportCSV);
+  $("btn-claude").addEventListener("click", copyForClaude);
+  $("btn-demo").addEventListener("click", demoWeek);
+  $("btn-demo-clear").addEventListener("click", clearDemo);
+  $("btn-import").addEventListener("click", () => $("file-import").click());
+  $("file-import").addEventListener("change", e => {
+    if(e.target.files[0]) importJSON(e.target.files[0]);
+    e.target.value = "";
+  });
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
